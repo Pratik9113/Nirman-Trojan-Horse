@@ -46,18 +46,18 @@ const vendors = [
 ];
 const message = "I am looking to purchase raw materials to manufacture 100 sofas. My requirements include: Wood/plywood for frames Foam for cushions Upholstery (fabric or leather) Springs, nails, and other accessories My budget is ₹30,000. Please provide your price quote";
 
-(async () => {
-    for (const vendor of vendors) {
-        try {
-            await sendSMS(message, vendor);
-            console.log(`Message sent to ${vendor}`);
-            const response = await axios.post("http://127.0.0.1:5000/sendMsgFromShopkeeper", { input: message, to: vendor });
-            console.log(`Message pushed to Flask server: ${response.data}`);
-        } catch (error) {
-            console.log(`Error sending SMS to ${vendor}:`, error.message);
-        }
-    }
-})();
+// (async () => {
+//     for (const vendor of vendors) {
+//         try {
+//             await sendSMS(message, vendor);
+//             console.log(`Message sent to ${vendor}`);
+//             const response = await axios.post("http://127.0.0.1:5000/sendMsgFromShopkeeper", { input: message, to: vendor });
+//             console.log(`Message pushed to Flask server: ${response.data}`);
+//         } catch (error) {
+//             console.log(`Error sending SMS to ${vendor}:`, error.message);
+//         }
+//     }
+// })();
 
 http.createServer(app).listen(1337, () => {
     console.log(`Twilio webhook server running on port 1337`);
