@@ -42,7 +42,6 @@ app.get("/", (req, res) => {
 
 const vendors = [
     "whatsapp:+917999505967",
-    "whatsapp:+919082015463"
 ];
 const message = "I am looking to purchase raw materials to manufacture 100 sofas. My requirements include: Wood/plywood for frames Foam for cushions Upholstery (fabric or leather) Springs, nails, and other accessories My budget is ₹30,000. Please provide your price quote";
 
