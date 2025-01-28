@@ -75,12 +75,20 @@ const bodyParser = require('body-parser');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { sendSMS } = require("./send.js"); 
 const { default: axios } = require('axios');
+const manufacturerRoute = require('./routes/manufactorRoute.js');
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+
+
+
+
+/* Manufacturer */
+app.post("/maker", manufacturerRoute);
 
 app.post('/sms', async (req, res) => {
     const vendorMessage = req.body.Body; 
