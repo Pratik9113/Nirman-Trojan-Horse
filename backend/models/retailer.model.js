@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ManufacturerSchema = new mongoose.Schema(
+const RetailerSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -12,35 +12,21 @@ const ManufacturerSchema = new mongoose.Schema(
       required: true,
       minlength: 10,
     },
-    password:{
-      type:String,
-      required:true
+    password: {
+      type: String,
+      required: true,
     },
     address: {
       type: String,
       required: true,
-    },
-    typeOfManufacturer: {
-      type: String,
-      enum: [
-        "Clothing",
-        "Furniture",
-        "Electronics",
-        "Food",
-        "Toys",
-        "Cosmetics",
-        "Sports Equipment",
-      ],
-      required: true,
-    },
-    products:[
+    },    
+    products: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product"
-      }
-    ]
+        ref: "Product",
+      },
+    ],
   },
   { timestamps: true }
 );
-
-module.exports = mongoose.model("Manufacturer", ManufacturerSchema);
+module.exports = mongoose.model("Retailer", RetailerSchema);

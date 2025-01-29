@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ManufacturerSchema = new mongoose.Schema(
+const RawMaterialSellerSchema = new mongoose.Schema(
   {
     email: {
       type: String,
@@ -12,35 +12,27 @@ const ManufacturerSchema = new mongoose.Schema(
       required: true,
       minlength: 10,
     },
-    password:{
-      type:String,
-      required:true
+    password: {
+      type: String,
+      required: true,
     },
     address: {
       type: String,
       required: true,
     },
-    typeOfManufacturer: {
+    typeOfRawMaterialSeller: {
       type: String,
-      enum: [
-        "Clothing",
-        "Furniture",
-        "Electronics",
-        "Food",
-        "Toys",
-        "Cosmetics",
-        "Sports Equipment",
-      ],
+      enum: ["Raw Material Seller"],
       required: true,
     },
-    products:[
+    raw_materials: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product"
-      }
-    ]
+        ref: "RawMaterial",
+      },
+    ],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Manufacturer", ManufacturerSchema);
+module.exports = mongoose.model("RawMaterialSeller", RawMaterialSellerSchema);
