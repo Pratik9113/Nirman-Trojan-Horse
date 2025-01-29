@@ -9,6 +9,7 @@ const LogoutRouter = require("./routes/logout.route");
 const NewProductRouter = require("./routes/new_product.route");
 const router = require("./routes/supplier.route")
 const RawMaterialRouter = require("./routes/raw_material")
+const transactionRouter = require("./routes/addTransaction")
 // const AddPostRouter = require("./routes/AddPost.routes");
 // const GetPostRouter = require("./routes/GetPost.route");
 const cookieParser = require("cookie-parser");
@@ -38,6 +39,7 @@ app.use("/api/logout", LogoutRouter);
 app.use("/api/product/create",NewProductRouter)
 app.use("/api/supplier",router)
 app.use("/api/raw_material",RawMaterialRouter)
+app.use("/api/transaction",transactionRouter)
 // app.use("/api/posts", AddPostRouter);
 // app.use("/api/posts", GetPostRouter);
 

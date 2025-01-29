@@ -1,9 +1,32 @@
-const mongoose = require("mongoose")
-const deliverySchema = new mongoose.Schema({
-    retailerId: { type: mongoose.Schema.Types.ObjectId, ref: "Seller" },
-    location: { type: { type: String, default: "Point" }, coordinates: [Number] }, // [longitude, latitude]
-    orderTime: { type: Date, default: Date.now },
-    status: { type: String, enum: ["pending", "assigned", "delivered"], default: "pending" }
-})
-const deliverySchemaModel = mongoose.model("Delivery", deliverySchema);
-module.exports = deliverySchemaModel;
+const mongoose = require("mongoose");
+const RetailerSchema = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      match: [/.+@.+\..+/, "Please enter a valid email address"],
+    },
+    phone: {
+      type: String,
+      required: true,
+      minlength: 10,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    address: {
+      type: String,
+      required: true,
+    },    
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product",
+      },
+    ],
+  },
+  { timestamps: true }
+);
+module.exports = mongoose.model("Retailer", RetailerSchema);
