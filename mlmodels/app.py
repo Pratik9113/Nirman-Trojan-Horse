@@ -170,6 +170,8 @@ import re
 import pandas as pd
 from flask_cors import CORS
 from urllib.parse import quote_plus
+import spacy 
+import json 
 
 app = Flask(__name__)
 CORS(app)
@@ -178,10 +180,11 @@ from pymongo import MongoClient
 
 
 
-mongo_url = os.getenv("MONGO_URL")  # Add your MongoDB URL in the .env file
+mongo_url = os.getenv("MONGO_URL")  
 client = MongoClient(mongo_url)
-db = client.get_database('ai_negogitate')  # Specify the database name here
+db = client.get_database('ai_negogitate')
 deals_collection = db['deals']   
+
 
 api_key = os.getenv("api_key")
 if not api_key:
@@ -195,14 +198,8 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
         store[session_id] = ChatMessageHistory()
     return store[session_id]
 
+file_path = "deals_data.json"
 def create_base_prompt(shopkeeper_msg=""):
-    # price_match = re.search(r"₹\s?(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?)", shopkeeper_msg)
-    # if price_match:
-    #     shopkeeper_amount = int(price_match.group(1).replace(",", ""))
-    #     reduced_amount = int(shopkeeper_amount * 0.9) 
-    #     item = "wood"
-    # else:
-    #     raise ValueError("Could not extract a valid price from the shopkeeper's message.")
     shopkeeper_amount=30000
     reduced_amount =27000
     item="wood"
@@ -255,60 +252,6 @@ def sendMsgFromShopkeeper():
     base_prompt_template = create_base_prompt(shopkeeper_msg)
     return jsonify({"message": "Shopkeeper's message stored and prompt updated successfully."})
 
-# @app.route("/negotiate", methods=["POST"])
-# def negotiate():
-#     input_data = request.json.get("input", "")
-#     vendor_phno = request.json.get("to", "")
-#     from_message = request.json.get("from", "")
-
-#     config = {"configurable": {"session_id": "fhdksjg"}}
-#     chain = base_prompt_template | model
-#     with_message_history = RunnableWithMessageHistory(chain, get_session_history)
-
-#     ai_response = with_message_history.invoke(
-#         [HumanMessage(content=input_data)],
-#         config=config,
-#     )
-#     print(type(ai_response))
-
-#     if isinstance(ai_response, str):
-#         vendor_message = ai_response.content.lower()
-#     else:
-#         vendor_message = str(ai_response.content).lower() if hasattr(ai_response, 'content') else str(ai_response).lower()
-
-#     print("Vendor message:", vendor_message)
-#     if "yes" in vendor_message:
-#         print(vendor_message)
-#         price_match = re.search(r'₹\s?(\d{1,3}(?:\d{3})*)', vendor_message)
-#         item_match = re.search(r'item\s*:\s*(\w+)', vendor_message)
-#         print("price_match : ", price_match)
-#         print("price_match : ", item_match)
-        
-#         if price_match and item_match:
-#             agreed_price = float(price_match.group(1).replace(",", ""))
-#             item = item_match.group(1).strip()
-#             deal = {
-#                 "from_message": from_message,
-#                 "vendor_phone": vendor_phno,
-#                 "agreed_price": agreed_price,
-#                 "item": item,
-#                 "status": "confirmed",
-#                 "timestamp": pd.Timestamp.now(),
-#             }
-
-#             deals_collection.insert_one(deal)
-#         else:
-#             return jsonify({
-#                 "response": ai_response.content,
-#                 "message": "Failed to confirm the deal. Price or item not found in the vendor's message.",
-#             })
-    
-#     return jsonify({
-#         "response": ai_response.content,
-#         "message": "Vendor did not confirm the deal."
-#     })
-
-
 
 @app.route("/negotiate", methods=["POST"])
 def negotiate():
@@ -316,7 +259,7 @@ def negotiate():
     vendor_phno = request.json.get("to", "")
     from_message = request.json.get("from", "")
 
-    config = {"configurable": {"session_id": "fhdksjg"}}
+    config = {"configurable": {"session_id": "46532"}}
     chain = base_prompt_template | model
     with_message_history = RunnableWithMessageHistory(chain, get_session_history)
 
@@ -332,36 +275,39 @@ def negotiate():
         vendor_message = str(ai_response.content).lower() if hasattr(ai_response, 'content') else str(ai_response).lower()
 
     print("Vendor message:", vendor_message)
-    match = re.search(r'₹\[(.*?)\] for item: \{(.*?)\}', vendor_message)
+    match = None
 
-    if match:
-        print(vendor_message)
-        price = match.group(1)  # Extracted price
-        item = match.group(2)   # Extracted item
-        print(f"Price: {price}, Item: {item}")
-        price_match = 30000 
-        item_match = "wood"
-
-        print("price_match : ", price_match)
-        print("item_match : ", item_match)
-
-        if price_match and item_match:
-
+    if vendor_message.lower().startswith("yes we’ve agreed on"):
+        match = re.search(r"₹(\d+)", vendor_message) 
+        if match:
+            agreed_price = match.group(1)
+            item = vendor_message[vendor_message.length-1]
+            print("Agreed Price:", agreed_price, item)
+        else:
+            print("Price not found")
+    
+    
+        if agreed_price:
             deal = {
                 "from_message": from_message,
                 "vendor_phone": vendor_phno,
-                "agreed_price": price_match,
-                "item": item_match,
+                "agreed_price": agreed_price,
+                "item": item,
                 "status": "confirmed",
-                "timestamp": pd.Timestamp.now(),
+                "timestamp": pd.Timestamp.now().isoformat(),
             }
 
-            deals_collection.insert_one(deal)
-        else:
-            return jsonify({
-                "response": ai_response.content,
-                "message": "Failed to confirm the deal. Price or item not found in the vendor's message.",
-            })
+            if os.path.exists(file_path):
+                with open(file_path, "r") as file:
+                    existing_data = json.load(file)
+            else:
+                existing_data = []
+
+            existing_data.append(deal)
+
+            with open(file_path, "w") as file:
+                json.dump(existing_data, file, indent=4)
+    
     else:
         return jsonify({
             "response": ai_response.content,

@@ -1,7 +1,11 @@
 const Seller = require("../models/seller.js");
 const { sendSMS } = require("../send.js");
 const getData = async(req, res)=>{
-    const {name,price} = req.body()
+    // const {name,price} = req.body()
+
+    /*Just for testing */
+    const name = "wood"
+    const price = 32000
     const message = `I am looking to purchase ${name} within a budget of ₹${price}. Please provide your price quote.`;
     try {
         const sellers = await Seller.find({ 'item.name': name });

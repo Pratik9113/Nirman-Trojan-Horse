@@ -75,7 +75,7 @@ const bodyParser = require('body-parser');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { sendSMS } = require("./send.js"); 
 const { default: axios } = require('axios');
-const manufacturerRoute = require('./routes/manufactorRoute.js');
+// const manufacturerRoute = require('./routes/manufactorRoute.js');
 
 const app = express();
 const PORT = 3000;
@@ -87,8 +87,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 
 
-/* Manufacturer */
-app.post("/maker", manufacturerRoute);
+// /* Manufacturer */
+// app.post("/maker", manufacturerRoute);
 
 app.post('/sms', async (req, res) => {
     const vendorMessage = req.body.Body; 
@@ -119,23 +119,23 @@ app.get("/", (req, res) => {
     res.send("Server is running");
 });
 
-// const vendors = [
-//     "whatsapp:+917999505967",
-// ];
-// const message = "I am looking to purchase raw materials to manufacture 100 sofas. My requirements include: Wood/plywood for frames Foam for cushions Upholstery (fabric or leather) Springs, nails, and other accessories My budget is ₹30,000. Please provide your price quote";
+const vendors = [
+    "whatsapp:+917999505967",
+];
+const message = "I am looking to purchase raw materials to manufacture 100 sofas. My requirements include: Wood/plywood for frames Foam for cushions Upholstery (fabric or leather) Springs, nails, and other accessories My budget is ₹30,000. Please provide your price quote";
 
-// (async () => {
-//     for (const vendor of vendors) {
-//         try {
-//             await sendSMS(message, vendor);
-//             console.log(`Message sent to ${vendor}`);
-//             const response = await axios.post("http://127.0.0.1:5000/sendMsgFromShopkeeper", { input: message, to: vendor });
-//             console.log(`Message pushed to Flask server: ${response.data}`);
-//         } catch (error) {
-//             console.log(`Error sending SMS to ${vendor}:`, error.message);
-//         }
-//     }
-// })();
+(async () => {
+    for (const vendor of vendors) {
+        try {
+            await sendSMS(message, vendor);
+            console.log(`Message sent to ${vendor}`);
+            const response = await axios.post("http://127.0.0.1:5000/sendMsgFromShopkeeper", { input: message, to: vendor });
+            console.log(`Message pushed to Flask server: ${response.data}`);
+        } catch (error) {
+            console.log(`Error sending SMS to ${vendor}:`, error.message);
+        }
+    }
+})();
 
 http.createServer(app).listen(1337, () => {
     console.log(`Twilio webhook server running on port 1337`);
