@@ -6,6 +6,7 @@ const TestRouter = require("./routes/test.router");
 const LoginRouter = require("./routes/login.route");
 const SignupRouter = require("./routes/signup.route");
 const LogoutRouter = require("./routes/logout.route");
+const NewProductRouter = require("./routes/new_product.route");
 // const AddPostRouter = require("./routes/AddPost.routes");
 // const GetPostRouter = require("./routes/GetPost.route");
 const cookieParser = require("cookie-parser");
@@ -32,6 +33,7 @@ app.use("/api/test", TestRouter);
 app.use("/api/login", LoginRouter);
 app.use("/api/signup", SignupRouter);
 app.use("/api/logout", LogoutRouter);
+app.use("/api/product/create",NewProductRouter)
 // app.use("/api/posts", AddPostRouter);
 // app.use("/api/posts", GetPostRouter);
 
