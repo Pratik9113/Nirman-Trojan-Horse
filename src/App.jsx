@@ -15,7 +15,7 @@ import RouteOptimization from "./Components/delivery";
 function App() {
   return (
     <>
-      <Router>
+      {/* <Router>
         <Navbar />
         <div className="App">
           <Routes>
@@ -35,8 +35,7 @@ function App() {
           </Routes>
           <Footer />
         </div>
-      </Router>
-
+      </Router> */}
       <RouteOptimization />
     </>
   );
