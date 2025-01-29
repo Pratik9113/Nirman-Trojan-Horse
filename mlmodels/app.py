@@ -61,33 +61,7 @@ def create_base_prompt(shopkeeper_msg="", negotiation_type=""):
         SystemMessage(content=f"You are an AI agent negotiating with a {negotiation_type} ."),
         SystemMessage(
             content=(
-                "You are an AI agent negotiating with a local vendor. Your goal is to get the best price without exceeding the shopkeeper's actual price. Keep the shopkeeper's actual price confidential. "
-                f"The extracted shopkeeper amount is stored as [shopkeeperamount={shopkeeper_amount}] and the reduced amount is stored as [amount={reduced_amount}].\n\n"
-                "Follow these steps for negotiation:\n\n"
-                "1. **Starting Offer:**\n"
-                f"   Begin by offering ₹{reduced_amount}. Say:\n"
-                f"   **'Hi! I’m looking to buy this {item}. I’d like to offer ₹{reduced_amount}. Let me know your thoughts.'**\n\n"
-                "2. **{negotiation_type} Offers:**\n"
-                f"   - If the vendor quotes **less than or equal to ₹{shopkeeper_amount}**, accept the offer immediately. Do not negotiate further. Confirm with:\n"
-                f"     **'Great! We’ve agreed on ₹[agreed price]. We will get back to you regarding the deal and delivery details shortly.'**\n"
-                f"     Then, ask:\n"
-                f"     **'Just to confirm, we’ve agreed on ₹[agreed price]. This price is final and cannot be changed. Are you sure about proceeding with this price? Answer in yes/no'**\n\n"
-                f"     - If the {negotiation_type} confirms with 'yes,'yes we’ve agreed on ₹[agreed price] for item: {item} \n\n"
-                f"   - If the {negotiation_type} quotes **above ₹{shopkeeper_amount}**, respond:\n"
-                f"     **'I understand your quote, but this ₹{reduced_amount} amount is what I can offer. Let me know if you can revise your offer to fit within this range.'**\n\n"
-                "3. **Incremental Counteroffers:**\n"
-                f"   - If the {negotiation_type} rejects, increase your offer incrementally in steps of ₹500 until you reach ₹{shopkeeper_amount}. After each offer, say:\n"
-                f"     **'I understand your quote, but I’d like to offer ₹[new price]. Let me know if this works for you.'**\n"
-                f"   - If the {negotiation_type} proposes a price **below your latest counteroffer but still above ₹{shopkeeper_amount}**, repeat:\n"
-                f"     **'₹{reduced_amount} is the maximum I can offer. Let me know if you can adjust your quote accordingly.'**\n\n"
-                "4. **Key Rules for Consistency:**\n"
-                f"   - If the {negotiation_type} proposes a price **below or equal to ₹{reduced_amount} at any point**, accept it immediately without further counteroffers or negotiation.\n"
-                f"   - Do not counter with a higher price than the {negotiation_type}'s latest offer.\n"
-                f"   - Never disclose ₹{shopkeeper_amount} as the maximum budget upfront. Reveal it only when the {negotiation_type} quotes a price above ₹{shopkeeper_amount}.\n"
-                "   - Maintain a polite and professional tone throughout the negotiation process.\n\n"
-                "5. **Final Confirmation:**\n"
-                f"   Once the {negotiation_type} agrees to a price ≤ ₹{shopkeeper_amount}, reiterate the agreed price and confirm with:\n"
-                f"   **'we’ve agreed on ₹[agreed price] for item: {item}. This price is final, and no changes will be entertained. Are you sure you’d like to proceed?'**"
+                
                 
             )
         ),

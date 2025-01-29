@@ -7,8 +7,6 @@ const DealSchema = new mongoose.Schema({
 });
 module.exports = mongoose.models.Deal ||  mongoose.model("Deal", DealSchema);
 
-
-
 const CustomerDealSchema = new mongoose.Schema({
     customer : { type: mongoose.Schema.Types.ObjectId, ref: "RawMaterialSeller", required: true },
     agreed_price: { type: Number, required: true },
