@@ -49,7 +49,7 @@ function Loginn() {
       };
       console.log("form data", FormData);
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND}/api/login`,
+        `http://localhost:3000/api/login`,
         {
           email: signInEmail,
           password: signInPassword,
@@ -64,7 +64,7 @@ function Loginn() {
         toast.success("User logged in successfully");
         setSignInEmail("");
         setSignInPassword("");
-        navigate("/dashboard/reads");
+        navigate("/manufacturer/dashboard");
       } else if (response.status === 401) {
         toast.error("Invalid credentials");
       } else {

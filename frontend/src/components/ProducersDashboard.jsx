@@ -70,14 +70,27 @@ export default function ProducersDashboard() {
     setConfirmedMaterialIds((prev) => [...prev, updatedMaterial.id])
   }
 
-  const handleFetchMaterials = () => {
-    const filtered = materials.filter(
-      (material) =>
-        material.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-        material.description.toLowerCase().includes(materialDescription.toLowerCase()) &&
-        material.price <= priceRange[0],
-    )
-    setFilteredMaterials(filtered)
+  const handleFetchMaterials = async() => {
+    // const filtered = materials.filter(
+    //   (material) =>
+    //     material.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+    //     material.description.toLowerCase().includes(materialDescription.toLowerCase()) &&
+    //     material.price <= priceRange[0],
+    // )
+    // setFilteredMaterials(filtered)
+    try {
+      const response = await axios.post("http://localhost:3000/api/materials", {
+        materialName: searchTerm,
+        description: materialDescription,
+        maxPrice: priceRange[0],
+      });
+
+      console.log("Response:", response.data);
+      alert("Materials fetched successfully!");
+    } catch (error) {
+      console.error("Error fetching materials:", error);
+      alert("Failed to fetch materials.");
+    }
   }
 
   const handlePurchase = () => {
