@@ -1,4 +1,4 @@
-import Post from "../models/post.model";
+const Post = require("../models/post.model");
 
 const post = async (req, res) => {
   const { title, description } = req.body;

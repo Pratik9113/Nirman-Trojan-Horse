@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const ManufacturerSchema = new mongoose.Schema(
   {
     email: {
@@ -11,6 +11,10 @@ const ManufacturerSchema = new mongoose.Schema(
       type: String,
       required: true,
       minlength: 10,
+    },
+    password:{
+      type:String,
+      required:true
     },
     address: {
       type: String,
@@ -29,6 +33,12 @@ const ManufacturerSchema = new mongoose.Schema(
       ],
       required: true,
     },
+    products:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+      }
+    ]
   },
   { timestamps: true }
 );

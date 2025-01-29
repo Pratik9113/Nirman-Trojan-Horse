@@ -1,5 +1,5 @@
-import Post from "../models/post.model.js";
-import User from "../models/user.model.js";
+const Post = require("../models/post.model");
+const User = require("../models/user.model");
 
 const AddPost = async (req, res) => {
   const { title, description } = req.body;
@@ -25,4 +25,5 @@ const AddPost = async (req, res) => {
     res.status(500).send(error.message);
   }
 };
-export { AddPost };
+
+module.exports = AddPost;

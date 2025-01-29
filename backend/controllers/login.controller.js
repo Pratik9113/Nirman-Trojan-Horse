@@ -1,12 +1,12 @@
-import jwt from "jsonwebtoken";
-import User from "../models/user.model.js";
+const jwt = require("jsonwebtoken");
+const Manufacturer = require("../models/manufacturer.model");
 
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
     return res.status(400).send("Please provide all the required fields");
   }
-  const user = await User.find({ email });
+  const user = await Manufacturer.find({ email });
   if (!user.length) {
     return res.status(404).send("User not found");
   }
@@ -18,19 +18,20 @@ const login = async (req, res) => {
     const data = {
       userId: user[0]._id,
     };
-    const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: "1d" });
     res.cookie("UserToken", token, {
       httpOnly: true,
       secure: false,
       sameSite: "strict",
+      maxAge:1000*60*60*24
     });
   } catch (error) {
-    res.status(500).send(error.message);
+    res.status(500).json(error.message);
   }
-  return res.status(200).send({
-    username: user[0].username,
+  return res.status(200).json({
+    username: user[0].email,
     message: "User logged in successfully",
   });
 };
 
-export { login };
+module.exports = { login };

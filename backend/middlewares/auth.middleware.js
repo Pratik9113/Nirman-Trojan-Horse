@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+const jwt = require("jsonwebtoken");
 const auth = (req, res, next) => {
   const tokenUser = req.cookies.UserToken;
   if (!tokenUser) {
@@ -17,4 +17,5 @@ const auth = (req, res, next) => {
       .json({ success: false, message: "Invalid or expired token" });
   }
 };
-export { auth };
+
+module.exports = auth;

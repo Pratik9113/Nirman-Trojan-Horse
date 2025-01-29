@@ -1,15 +1,18 @@
-
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-import connectDB from "./config/db.js";
-import TestRouter from "./routes/test.router.js";
-import LoginRouter from "./routes/login.route.js";
-import SignupRouter from "./routes/signup.route.js";
-import LogoutRouter from "./routes/logout.route.js";
-import cookieParser from "cookie-parser";
-import AddPostRouter from "./routes/AddPost.routes.js";
-import GetPostRouter from "./routes/GetPost.route.js";
+const express = require("express");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const connectDB = require("./config/db");
+const TestRouter = require("./routes/test.router");
+const LoginRouter = require("./routes/login.route");
+const SignupRouter = require("./routes/signup.route");
+const LogoutRouter = require("./routes/logout.route");
+const NewProductRouter = require("./routes/new_product.route");
+const router = require("./routes/supplier.route")
+const RawMaterialRouter = require("./routes/raw_material")
+const transactionRouter = require("./routes/addTransaction")
+// const AddPostRouter = require("./routes/AddPost.routes");
+// const GetPostRouter = require("./routes/GetPost.route");
+const cookieParser = require("cookie-parser");
 
 dotenv.config();
 const app = express();
@@ -21,32 +24,27 @@ connectDB();
 // Middleware
 app.use(cookieParser());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(
-  cors({
+app.use(cors(
+  {
     origin: "http://localhost:5173",
     credentials: true,
-  })
-);
+  }
+));
 
 // Routes
-app.use("/", TestRouter);
-app.use("/user/login", LoginRouter);
-app.use("/user/signup", SignupRouter);
-app.use("/user/logout", LogoutRouter);
-app.use("/dashboard", AddPostRouter);
-app.use("/dashboard", GetPostRouter);
-app.use("/dashboard", GetPostRouter);
+app.use("/api/test", TestRouter);
+app.use("/api/login", LoginRouter);
+app.use("/api/signup", SignupRouter);
+app.use("/api/logout", LogoutRouter);
+app.use("/api/product/create",NewProductRouter)
+app.use("/api/supplier",router)
+app.use("/api/raw_material",RawMaterialRouter)
+app.use("/api/transaction",transactionRouter)
+// app.use("/api/posts", AddPostRouter);
+// app.use("/api/posts", GetPostRouter);
 
-// Error Handling Middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send("Something went wrong!");
-});
-
-// Start Server
 app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server running on port ${port}`);
 });
 
 // const http = require('http');
@@ -122,11 +120,17 @@ app.listen(port, () => {
 
 // const http = require('http');
 // const express = require("express");
-// const bodyParser = require('body-parser');
-// const MessagingResponse = require('twilio').twiml.MessagingResponse;
-// const { sendSMS } = require("./send.js"); 
-// const { default: axios } = require('axios');
-// const manufacturerRoute = require('./routes/manufactorRoute.js');
+// const dotenv = require("dotenv");
+// const cors = require("cors");
+// const connectDB = require("./config/db");
+// const TestRouter = require("./routes/test.router");
+// const LoginRouter = require("./routes/login.route");
+// const SignupRouter = require("./routes/signup.route");
+// const LogoutRouter = require("./routes/logout.route");
+// const NewProductRouter = require("./routes/new_product.route");
+// // const AddPostRouter = require("./routes/AddPost.routes");
+// // const GetPostRouter = require("./routes/GetPost.route");
+// const cookieParser = require("cookie-parser");
 
 // const app = express();
 // const PORT = 3000;
@@ -134,13 +138,19 @@ app.listen(port, () => {
 // app.use(express.json());
 // app.use(bodyParser.urlencoded({ extended: false }));
 
+// // Routes
+// app.use("/api/test", TestRouter);
+// app.use("/api/login", LoginRouter);
+// app.use("/api/signup", SignupRouter);
+// app.use("/api/logout", LogoutRouter);
+// app.use("/api/product/create",NewProductRouter)
+// // app.use("/api/posts", AddPostRouter);
+// // app.use("/api/posts", GetPostRouter);
 
 
 
 
 // /* Manufacturer */
-// app.post("/maker", manufacturerRoute);
-
 // app.post('/sms', async (req, res) => {
 //     const vendorMessage = req.body.Body; 
 //     const from = req.body.From; 
@@ -171,7 +181,7 @@ app.listen(port, () => {
 // });
 
 // const vendors = [
-//     "whatsapp:+918928877911",
+//     "whatsapp:+917999505967",
 // ];
 // const message = "I am looking to purchase raw materials to manufacture 100 sofas. My requirements include: Wood/plywood for frames Foam for cushions Upholstery (fabric or leather) Springs, nails, and other accessories My budget is ₹30,000. Please provide your price quote";
 
