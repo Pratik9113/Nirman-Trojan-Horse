@@ -20,17 +20,12 @@ const RawMaterialSellerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    typeOfRawMaterialSeller: {
-      type: String,
-      enum: ["Raw Material Seller"],
-      required: true,
-    },
-    raw_materials: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "RawMaterial",
-      },
-    ],
+    // raw_materials: [
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "RawMaterial",
+    //   },
+    // ],
   },
   { timestamps: true }
 );

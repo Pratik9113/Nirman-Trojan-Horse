@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const RawMaterialSellerSchema = require('../models/raw_material_seller.model');
 const createSupplier = async (req, res) => {
     try {
         const { email, phone, password, address, raw_materials } = req.body;
@@ -7,7 +7,6 @@ const createSupplier = async (req, res) => {
             phone,
             password,
             address,
-            typeOfRawMaterialSeller: "Raw Material Seller",
             raw_materials
         });
         await newSupplier.save();
