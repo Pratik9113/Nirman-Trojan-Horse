@@ -160,21 +160,21 @@ app.listen(port, () => {
 
 //     const input = `Message received from ${from}: ${vendorMessage} : ${to}`;
 
-//     try {
-//         const response = await axios.post("http://127.0.0.1:5000/negotiate", { input, from });
-//         const twiml = new MessagingResponse();
-//         // twiml.message('The Robots are coming!'); 
-//         twiml.message(response.data.response); 
-//         res.writeHead(200, { 'Content-Type': 'text/xml' });
-//         res.end(twiml.toString());
-//     } catch (error) {
-//         console.error("Error negotiating:", error.message);
-//         const twiml = new MessagingResponse();
-//         twiml.message("An error occurred. Please try again later.");
-//         res.writeHead(200, { 'Content-Type': 'text/xml' });
-//         res.end(twiml.toString());
-//     }
-// });
+    try {
+        const response = await axios.post("http://127.0.0.1:5000/negotiate", { input, from });
+        const twiml = new MessagingResponse();
+        // twiml.message('The Robots are coming!'); 
+        twiml.message(response.data.response); 
+        res.writeHead(200, { 'Content-Type': 'text/xml' });
+        res.end(twiml.toString());
+    } catch (error) {
+        console.error("Error negotiating:", error.message);
+        const twiml = new MessagingResponse();
+        twiml.message("An error occurred. Please try again later.");
+        res.writeHead(200, { 'Content-Type': 'text/xml' });
+        res.end(twiml.toString());
+    }
+});
 
 // app.get("/", (req, res) => {
 //     res.send("Server is running");
