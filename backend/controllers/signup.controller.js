@@ -1,37 +1,37 @@
-import User from "../models/user.model.js";
-import cloudinary from "../utils/cloudinary.js";
+const Manufacturer = require("../models/manufacturer.model");
+const cloudinary = require("cloudinary").v2;
 
 const signup = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: "Profile image is required" });
-    }
-    const uploadResult = await cloudinary.uploader.upload(req.file.path);
-    console.log("Cloudinary upload result:", uploadResult);
-    const { username, email, password } = req.body;
-    if (!username || !email || !password) {
+    // if (!req.file) {
+    //   return res.status(400).json({ message: "Profile image is required" });
+    // }
+    // const uploadResult = await cloudinary.uploader.upload(req.file.path);
+    // console.log("Cloudinary upload result:", uploadResult);
+    const { address, email, password, phone_number,manufacturer_type} = req.body;
+    if ( !email || !password || !address || !phone_number || !manufacturer_type) {
       return res.status(400).send("Please provide all the required fields");
     }
-    const existingUser = await User.findOne({ email });
+    const existingUser = await Manufacturer.findOne({ email });
     if (existingUser) {
-      return res.status(409).send("User already exists");
+      return res.status(409).send("Manfacturer already exists");
     }
-    console.log(uploadResult);
-    console.log(uploadResult.secure_url);
-    const newUser = new User({
-      username,
+    // console.log(uploadResult);
+    // console.log(uploadResult.secure_url);
+    const newManufacturer = new Manufacturer({
+      address,
       email,
       password,
-      profilePic: uploadResult.secure_url,
+      phone:phone_number,
+      typeOfManufacturer:manufacturer_type
     });
-    await newUser.save();
+    await newManufacturer.save();
 
-    res.status(201).send("User created successfully");
+    res.status(201).send("Manufacturer created successfully");
   } catch (error) {
     console.error("Error during signup:", error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-
-export { signup };
+module.exports = signup;

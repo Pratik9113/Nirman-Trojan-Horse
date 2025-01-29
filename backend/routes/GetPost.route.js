@@ -1,7 +1,8 @@
-import express from "express";
-import { auth } from "../middlewares/auth.middleware.js";
-import { GetPost, GetUsers } from "../controllers/GetPost.controller.js";
+const express = require("express");
+const { auth } = require("../middlewares/auth.middleware");
+const { GetPost, GetUsers } = require("../controllers/GetPost.controller");
+
 const GetPostRouter = express.Router();
 GetPostRouter.get("/getpost", auth, GetPost);
 GetPostRouter.get("/getusers", auth, GetUsers);
-export default GetPostRouter;
+module.exports = GetPostRouter;

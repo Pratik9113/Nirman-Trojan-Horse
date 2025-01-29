@@ -497,7 +497,7 @@ nav {
   border-color: #fff;
 }
 
-.container form {
+.container form  {
   background-color: #fff;
   display: flex;
   align-items: center;
@@ -507,7 +507,7 @@ nav {
   height: 100%;
 }
 
-.container input {
+.container input{
   background-color: #eee;
   border: none;
   margin: 8px 0;

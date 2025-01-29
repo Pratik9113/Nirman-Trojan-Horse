@@ -1,7 +1,7 @@
-import express from "express";
-import { signup } from "../controllers/signup.controller.js";
-import upload from "../middlewares/multer.middleware.js";
+const express = require("express");
+const signup = require("../controllers/signup.controller");
+const upload = require("../middlewares/multer.middleware");
 
 const SignupRouter = express.Router();
 SignupRouter.post("/", upload.single("image"), signup);
-export default SignupRouter;
+module.exports = SignupRouter;
