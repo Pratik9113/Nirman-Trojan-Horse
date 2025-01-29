@@ -17,12 +17,12 @@ const RawMaterialSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "RawMaterialSupplier",
     },
-    products: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-    ],
+    // products: [
+    //   { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+    // ],
     photo_url:{
       type:String,
-      required:true
+      required:false
     }
   },
   { timestamps: true }
