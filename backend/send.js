@@ -19,3 +19,4 @@ const sendSMS = async(body, recipient) => {
 }
 
 module.exports = {sendSMS}
+
