@@ -1,5 +1,5 @@
-import Post from "../models/post.model.js";
-import User from "../models/user.model.js";
+const Post = require("../models/post.model.js");
+const User = require("../models/user.model.js");
 const GetPost = async (req, res) => {
   try {
     const posts = await Post.find();
@@ -24,4 +24,4 @@ const GetUsers = async (req, res) => {
   }
 };
 
-export { GetPost, GetUsers };
+module.exports = { GetPost, GetUsers };

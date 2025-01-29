@@ -14,29 +14,30 @@ import RouteOptimization from "./Components/delivery";
 
 function App() {
   return (
-    // <Router>
-    //   <Navbar />
-    //   <div className="App">
-    //     <Routes>
-    //       <Route
-    //         path="/"
-    //         element={
-    //           <>
-    //             <Home /> <About /> <Work /> <Testimonial /> <Contact />
-    //           </>
-    //         }
-    //       />
-    //       <Route path="/about" element={<About />} />
-    //       <Route path="/work" element={<Work />} />
-    //       <Route path="/testimonials" element={<Testimonial />} />
-    //       <Route path="/contact" element={<Contact />} />
-    //       <Route path="/login" element={<Login />} />
-    //     </Routes>
-    //     <Footer />
-    //   </div>
-    // </Router>
     <>
-      <RouteOptimization/>
+      <Router>
+        <Navbar />
+        <div className="App">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <>
+                  <Home /> <About /> <Work /> <Testimonial /> <Contact />
+                </>
+              }
+            />
+            <Route path="/about" element={<About />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/testimonials" element={<Testimonial />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+
+      <RouteOptimization />
     </>
   );
 }

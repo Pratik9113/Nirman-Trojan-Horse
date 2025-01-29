@@ -1,6 +1,6 @@
-import express from "express";
-import { AddPost } from "../controllers/AddPost.controller.js";
-import { auth } from "../middlewares/auth.middleware.js";
+const express = require("express");
+const AddPost = require("../controllers/AddPost.controller");
+const { auth } = require("../middlewares/auth.middleware");
 const AddPostRouter = express.Router();
-AddPostRouter.post("/addpost",auth,AddPost);
-export default AddPostRouter;
+AddPostRouter.post("/addpost", auth, AddPost);
+module.exports = AddPostRouter;
