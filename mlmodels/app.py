@@ -12,13 +12,6 @@ from langchain_core.messages import HumanMessage,SystemMessage
 from langchain_groq import ChatGroq
 from langchain_core.runnables import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from langchain_groq import ChatGroq
-from langchain_community.chat_message_histories import ChatMessageHistory
-import re
-import pandas as pd
-from flask_cors import CORS
-from urllib.parse import quote_plus
 
 app = Flask(__name__)
 CORS(app)
@@ -27,16 +20,22 @@ load_dotenv()
 # Connect to MongoDB
 mongo_url = os.getenv("MONGO_URL")
 client = MongoClient(mongo_url)
-db = client.get_database('ai_negogitate')  # Specify the database name here
-deals_collection = db['deals']   
+db = client.get_database('ai_negogitate')
+print("Connected to MongoDB")
 
+
+
+# Collections for storing deals separately
+deals_collection = db['deals']  # Vendor Deals
+retailer_deals_collection = db['retailer_deals']  # Retailer Deals
+test_db = db['test']  # Test Collection
+# Setup AI Model
 api_key = os.getenv("api_key")
 if not api_key:
     raise ValueError("API key not found. Please set it in the .env file.")
 
 model = ChatGroq(model="gemma2-9b-it", groq_api_key=api_key)
 
-# Stores for chat history (separate for vendors and retailers)
 vendor_store = {}
 retailer_store = {}
 
@@ -110,6 +109,8 @@ def sendMsgFromShopkeeper():
     
     return jsonify({"message": "Shopkeeper's message stored for vendor negotiation."})
 
+
+
 @app.route("/negotiate", methods=["POST"])
 def negotiate():
     input_data = request.json.get("input", "")
@@ -125,16 +126,42 @@ def negotiate():
         config=config,
     )
 
-    vendor_message = input_data.lower()
-    if vendor_message.lower().startswith("yes we’ve agreed on"):
-        match = re.search(r"₹(\d+)", vendor_message) 
+    # vendor_message = ai_response.content.lower()
+    # print("Vendor message:", vendor_message)  
+
+    # if vendor_message.startswith("yes we’ve agreed on"):
+    #     match = re.search(r"₹(\d+)", vendor_message)
+    #     if match:
+    #         agreed_price = match.group(1)
+    #         print("Agreed Price:", agreed_price)
+
+    #         item_match = re.search(r"for item:\s*(\w+)", vendor_message)
+    #         if item_match:
+    #             item = item_match.group(1)
+    #             print("Agreed item:", item)
+    #         else:
+    #             print("Item not found.")
+    #     else:
+    #         print("Price not found.")
+    
+    ai_final_message ="yes we’ve agreed on ₹27000 for item: wood"
+    match = None
+
+    if ai_final_message.lower().startswith("yes we’ve agreed on"):
+        match = re.search(r"₹(\d+)", ai_final_message)
+
         if match:
             agreed_price = match.group(1)
-            item = vendor_message.split()[-1]
-            print("Agreed Price:", agreed_price, item)
         else:
+            agreed_price = None
             print("Price not found")
-    
+
+        item = ai_final_message[-1] if len(ai_final_message) > 0 else None
+        # item = ai_final_message[ai_final_message.length-1]
+
+        print("Agreed Price:", agreed_price)
+        print("Item:", item)
+
         if agreed_price:
             deal = {
                 "from_message": from_message,
@@ -144,25 +171,16 @@ def negotiate():
                 "status": "confirmed",
                 "timestamp": pd.Timestamp.now().isoformat(),
             }
-
-            # Save deal to MongoDB
-            db.deals.insert_one(deal)
-            print("Saving deal:", deal, flush=True)  # Log deal details
-            return jsonify({"response": ai_response.content, "message": "Vendor negotiation completed."})
-
-            # if os.path.exists(file_path):
-            #     with open(file_path, "r") as file:
-            #         existing_data = json.load(file)
-            # else:
-            #     existing_data = []
-
-            # existing_data.append(deal)
-
-            # with open(file_path, "w") as file:
-            #     json.dump(existing_data, file, indent=4)
-            #     json.dump(existing_data, file, indent=4)
+            try:
+                db.deals.insert_one(deal)
+                print("Deal saved successfully.")
+            except Exception as e:
+                print("Error inserting deal into database:", e)
+        else:
+            print("Agreed price or item missing.")
 
     return jsonify({"response": ai_response.content, "message": "Vendor negotiation ongoing."})
+
 
 # --------------- Retailer Negotiation ---------------
 
@@ -205,25 +223,27 @@ def negotiateRetailer():
 
             deal = {
                 "from_message": from_message,
-                "vendor_phone": vendor_phno,
-                "agreed_price": price_match,
-                "item": item_match,
+                "retailer_phone": retailer_phno,
+                "agreed_price": agreed_price,
+                "item": item,
                 "status": "confirmed",
-                "timestamp": pd.Timestamp.now().isoformat(),
+                "timestamp": pd.Timestamp.now(),
             }
+            retailer_deals_collection.insert_one(deal)  
+            print(deal)
 
-            deals_collection.insert_one(deal)
-        else:
-            return jsonify({
-                "response": ai_response.content,
-                "message": "Failed to confirm the deal. Price or item not found in the vendor's message.",
-            })
-    else:
-        return jsonify({
-            "response": ai_response.content,
-            "message": "Vendor did not confirm the deal."
-        })
+    return jsonify({"response": ai_response.content, "message": "Retailer negotiation ongoing."})
 
 
+# --------------- Test API ---------------
+@app.route("/test", methods=["POST"])
+def test():
+    data = request.json
+    test_db.insert_one(data)
+    return jsonify({"message": "Data saved to test collection."})
+
+
+
+# Run Flask app
 if __name__ == "__main__":
     app.run(debug=True)
