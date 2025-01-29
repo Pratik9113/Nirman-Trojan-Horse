@@ -12,7 +12,8 @@ from langchain_core.messages import HumanMessage,SystemMessage
 from langchain_groq import ChatGroq
 from langchain_core.runnables import RunnableWithMessageHistory
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
-
+import json 
+JSON_FILE = "deals.json"
 app = Flask(__name__)
 CORS(app)
 load_dotenv()
@@ -86,7 +87,7 @@ def create_base_prompt(shopkeeper_msg="", negotiation_type=""):
                 "   - Maintain a polite and professional tone throughout the negotiation process.\n\n"
                 "5. **Final Confirmation:**\n"
                 f"   Once the {negotiation_type} agrees to a price ≤ ₹{shopkeeper_amount}, reiterate the agreed price and confirm with:\n"
-                f"   **'Just to confirm, we’ve agreed on ₹[agreed price]. This price is final, and no changes will be entertained. Are you sure you’d like to proceed?'**"
+                f"   **'we’ve agreed on ₹[agreed price] for item: {item}. This price is final, and no changes will be entertained. Are you sure you’d like to proceed?'**"
                 
             )
         ),
@@ -111,6 +112,94 @@ def sendMsgFromShopkeeper():
 
 
 
+# # this is  a func to read
+# def read_json():
+#     if os.path.exists(JSON_FILE):
+#         with open(JSON_FILE, "r") as file:
+#             try:
+#                 return json.load(file)
+#             except json.JSONDecodeError:
+#                 return []
+#     return []
+
+# # this is a func to write 
+# def write_json(data):
+#     with open(JSON_FILE, "w") as file:
+#         json.dump(data, file, indent=4)
+
+
+
+# @app.route("/negotiate", methods=["POST"])
+# def negotiate():
+#     input_data = request.json.get("input", "")
+#     vendor_phno = request.json.get("to", "")
+#     from_message = request.json.get("from", "")
+
+#     config = {"configurable": {"session_id": vendor_phno}}
+#     chain = vendor_prompt_template | model
+#     with_message_history = RunnableWithMessageHistory(chain, get_vendor_history)
+
+#     ai_response = with_message_history.invoke(
+#         [HumanMessage(content=input_data)],
+#         config=config,
+#     )
+
+#     ai_final_message =ai_response.content
+#     match = None
+
+#     if ai_final_message.lower().startswith("yes we’ve agreed on"):
+#         match = re.search(r"₹(\d+)", ai_final_message)
+
+#         if match:
+#             agreed_price = match.group(1)
+#         else:
+#             agreed_price = None
+#             print("Price not found")
+
+#         item = ai_final_message[-1] if len(ai_final_message) > 0 else None
+
+#         print("Agreed Price:", agreed_price)
+#         print("Item:", item)
+
+#         if agreed_price or item:
+#             new_deal = {
+#                 "from_message": from_message,
+#                 "vendor_phone": vendor_phno,
+#                 "agreed_price": agreed_price,
+#                 "item": item,
+#                 "status": "confirmed",
+#                 "timestamp": pd.Timestamp.now().isoformat(),
+#             }
+
+#             existing_deals = read_json()
+#             existing_deals.append(new_deal)
+#             write_json(existing_deals)
+
+#             print("Deal saved successfully.")
+#         else:
+#             print("Agreed price or item missing.")
+
+#     return jsonify({"response": ai_response.content, "message": "Vendor negotiation ongoing."})
+
+
+
+
+
+def read_json():
+    """Reads data from a JSON file."""
+    if os.path.exists(JSON_FILE):
+        with open(JSON_FILE, "r") as file:
+            try:
+                return json.load(file)
+            except json.JSONDecodeError:
+                return []
+    return []
+
+def write_json(data):
+    """Writes data to a JSON file."""
+    with open(JSON_FILE, "w") as file:
+        json.dump(data, file, indent=4)
+
 @app.route("/negotiate", methods=["POST"])
 def negotiate():
     input_data = request.json.get("input", "")
@@ -126,44 +215,29 @@ def negotiate():
         config=config,
     )
 
-    # vendor_message = ai_response.content.lower()
-    # print("Vendor message:", vendor_message)  
-
-    # if vendor_message.startswith("yes we’ve agreed on"):
-    #     match = re.search(r"₹(\d+)", vendor_message)
-    #     if match:
-    #         agreed_price = match.group(1)
-    #         print("Agreed Price:", agreed_price)
-
-    #         item_match = re.search(r"for item:\s*(\w+)", vendor_message)
-    #         if item_match:
-    #             item = item_match.group(1)
-    #             print("Agreed item:", item)
-    #         else:
-    #             print("Item not found.")
-    #     else:
-    #         print("Price not found.")
-    
-    ai_final_message ="yes we’ve agreed on ₹27000 for item: wood"
-    match = None
+    ai_final_message = ai_response.content
+    agreed_price = None
+    item = None
 
     if ai_final_message.lower().startswith("yes we’ve agreed on"):
-        match = re.search(r"₹(\d+)", ai_final_message)
+        price_match = re.search(r"₹(\d+)", ai_final_message)
+        item_match = re.search(r"for item:\s*([\w\s]+)", ai_final_message)
 
-        if match:
-            agreed_price = match.group(1)
+        if price_match:
+            agreed_price = price_match.group(1)
         else:
-            agreed_price = None
-            print("Price not found")
+            print("Price not found.")
 
-        item = ai_final_message[-1] if len(ai_final_message) > 0 else None
-        # item = ai_final_message[ai_final_message.length-1]
+        if item_match:
+            item = item_match.group(1).strip()
+        else:
+            print("Item not found.")
 
         print("Agreed Price:", agreed_price)
         print("Item:", item)
 
-        if agreed_price:
-            deal = {
+        if agreed_price and item: 
+            new_deal = {
                 "from_message": from_message,
                 "vendor_phone": vendor_phno,
                 "agreed_price": agreed_price,
@@ -171,16 +245,15 @@ def negotiate():
                 "status": "confirmed",
                 "timestamp": pd.Timestamp.now().isoformat(),
             }
-            try:
-                db.deals.insert_one(deal)
-                print("Deal saved successfully.")
-            except Exception as e:
-                print("Error inserting deal into database:", e)
+            existing_deals = read_json()
+            existing_deals.append(new_deal)
+            write_json(existing_deals)
+
+            print("Deal saved successfully.")
         else:
             print("Agreed price or item missing.")
 
     return jsonify({"response": ai_response.content, "message": "Vendor negotiation ongoing."})
-
 
 # --------------- Retailer Negotiation ---------------
 
