@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "npx nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +13,7 @@
   "description": "",
   "dependencies": {
     "axios": "^1.7.9",
+    "backend": "file:",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.7",
     "cookieparser": "^0.1.0",
@@ -21,10 +22,7 @@
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.9.5",
-
     "multer": "^1.4.5-lts.1",
-
     "twilio": "^5.4.3"
-
   }
 }
