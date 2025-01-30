@@ -19,14 +19,16 @@ On top of that he has no analysis of what his customers like and the piling up d
 
 This is when sameer comes to know about Nirman Gati. Which is an AI/ML based business optimization platform.
 
-<h5>what we offer: </h5>
-Choose Your Producers - Browse our extensive catalog to find the perfect prices for your requirements.
-Sell Your Products - Select a price range, product and quantity that fits your business.
-Quick Delivery and Setup - Enjoy fast delivery and professional setup, so you create your brand value.
+# what we offer:
+<br>Choose Your Producers - Browse our extensive catalog to find the perfect prices for your requirements.</br>
+<br>Sell Your Products - Select a price range, product and quantity that fits your business.</br>
+<br>Quick Delivery and Setup - Enjoy fast delivery and professional setup, so you create your brand value.</br>
+
+
 
 Experience a seamless and efficient process designed to make your business grow using a streamlined preocess.
-<h6>Procure your raw material, track orders from retailers, and monitor
-            payments with ease. Streamline Your Business</h6>
+<h3>Procure your raw material, track orders from retailers, and monitor
+            payments with ease. Streamline Your Business</h3>
 
 
 
