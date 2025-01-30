@@ -1,5 +1,7 @@
 # Nirman Gati
 
+# Team Name: Trojan Horse_41
+
 ## Overview
 **Nirman Gati** is a smart platform designed to help local manufacturers streamline their operations by addressing inefficiencies in demand forecasting, inventory management, and unsustainable practices. By reducing costs, minimizing resource wastage, and optimizing supply chain processes, we aim to provide a solution that enhances business performance and sustainability.
 
@@ -47,29 +49,11 @@ As a manufacturer or a shop owner (e.g., Raj, a sofa maker), you can use **Nirma
 - **Sustainability**: By reducing unnecessary transportation and improving routing efficiency, we actively contribute to reducing the carbon footprint of your business.
 - **AI-Driven Insights**: The app uses artificial intelligence to give you suggestions on inventory based on your sales data, ensuring you are never overstocked or understocked.
 
-## Links
-- **PPT**: [Link to Presentation](#)
-- **Video**: [Link to Demo Video](#)
 
-## Getting Started
-To start using **Nirman Gati**:
-1. Download the app from [App Store/Google Play].
-2. Create an account.
-3. Enter your material and inventory details.
-4. Start managing your manufacturing process with optimized tools.
 
 ## Tech Stack
-- **Frontend**: React Native (for mobile app development)
-- **Backend**: Node.js, Express
+- **Frontend**: React (for mobile app development)
+- **Backend**: Node.js, Express Flask
 - **Database**: MongoDB
-- **AI Tools**: TensorFlow for demand forecasting
+- **AI Tools**: GenAi
 
-## Future Enhancements
-- **Expanded Vendor Network**: Continuous growth of vendor partnerships for more competitive pricing.
-- **Advanced AI**: More refined recommendations based on deep analysis of sales trends and seasonal demand.
-
-## Contributing
-We welcome contributions to improve the Nirman Gati platform. Feel free to open issues, suggest features, or submit pull requests. 
-
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
