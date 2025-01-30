@@ -1,5 +1,5 @@
-const RawMaterial = require("../models/raw_material.model");
-const RawMaterialSeller = require("../models/raw_material_seller.model");
+const RawMaterial = require("../models/raw_material");
+const RawMaterialSeller = require("../models/raw_material_seller");
 
 const getRawMaterials = async (req, res) => {
     try {

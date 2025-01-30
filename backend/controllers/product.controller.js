@@ -1,6 +1,6 @@
-const Product = require("../models/product.model");
-const Manufacturer = require("../models/manufacturer.model");
-const RawMaterial = require("../models/raw_material.model");
+const Product = require("../models/product");
+const Manufacturer = require("../models/manufacturer");
+const RawMaterial = require("../models/raw_material");
 
 
 // Create and Save a new Product

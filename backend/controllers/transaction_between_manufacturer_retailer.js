@@ -1,7 +1,7 @@
     const Transaction_between_manufacturer_retailer = require('../models/transaction_between_manufacturer_retailer')
     const Retailer = require('../models/retailer')
-    const Manufacturer = require('../models/manufacturer.model')
-    const Product = require('../models/product.model')
+    const Manufacturer = require('../models/manufacturer')
+    const Product = require('../models/product')
 
 
     const addTransaction = async (req, res) => {

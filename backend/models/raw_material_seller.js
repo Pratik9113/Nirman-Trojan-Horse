@@ -24,6 +24,12 @@ const RawMaterialSellerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    transactions:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transactions"
+      }
+    ],
     // raw_materials: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,

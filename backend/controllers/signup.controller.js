@@ -1,4 +1,4 @@
-const Manufacturer = require("../models/manufacturer.model");
+const Manufacturer = require("../models/manufacturer");
 const cloudinary = require("cloudinary").v2;
 
 const signup = async (req, res) => {

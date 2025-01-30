@@ -23,7 +23,13 @@ const RetailerSchema = new mongoose.Schema(
     address: {
       type: String,
       required: true,
-    },    
+    },   
+    transactions:[
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Transactions"
+      }
+    ],
     products: [
       {
         type: mongoose.Schema.Types.ObjectId,
