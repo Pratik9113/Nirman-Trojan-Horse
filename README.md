@@ -6,7 +6,7 @@
 **Nirman Gati** is a smart platform designed to help local manufacturers streamline their operations by addressing inefficiencies in demand forecasting, inventory management, and unsustainable practices. By reducing costs, minimizing resource wastage, and optimizing supply chain processes, we aim to provide a solution that enhances business performance and sustainability.
 
 ## Links
-- **PPT**: [Link to Presentation](#)
+- **PPT**: [Link to Presentation]( https://www.canva.com/design/DAGcJf6QFf4/Tgo45uLt6xjzgcWfY3ZE1g/edit)
 - **Video**: [Link to Demo Video](#)
 
 
