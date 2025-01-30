@@ -22,7 +22,7 @@ rewards_collection = db["reward"]
 one_month_ago = datetime.now() - timedelta(days=30)
 
 
-customers = list(customers_collection.find({}, {"_id": 1, "customer_name": 1, "customer_email": 1}))
+customers = list(customers_collection.find({}, {"_id": 1, "name": 1, "email": 1}))
 customers_df = pd.DataFrame(customers)
 
 
