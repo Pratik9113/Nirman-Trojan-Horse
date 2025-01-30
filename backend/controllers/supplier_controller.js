@@ -1,8 +1,9 @@
 const RawMaterialSellerSchema = require('../models/raw_material_seller.model');
 const createSupplier = async (req, res) => {
     try {
-        const { email, phone, password, address, raw_materials } = req.body;
+        const { email, phone, password, address, raw_materials,name } = req.body;
         const newSupplier = new RawMaterialSellerSchema({
+            name,
             email,
             phone,
             password,

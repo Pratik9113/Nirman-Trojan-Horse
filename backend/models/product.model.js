@@ -19,15 +19,7 @@ const ProductSchema = new mongoose.Schema(
     },
     raw_materials: [
       { type: mongoose.Schema.Types.ObjectId, ref: "RawMaterial" },
-    ],
-    product_price:{
-      type:Number,
-      required:true
-    },
-    product_quantity:{
-      type:Number,
-      required:true
-    },    
+    ],  
   },
   { timestamps: true }
 );

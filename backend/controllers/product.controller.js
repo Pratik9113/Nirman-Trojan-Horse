@@ -11,8 +11,6 @@ const createNewProduct = async (req, res) => {
     quantity,
     manufacturer,
     raw_materials,
-    product_price,
-    product_quantity,
     manufacturer_id,
   } = req.body;
   if (
@@ -20,9 +18,7 @@ const createNewProduct = async (req, res) => {
     !price ||
     !quantity ||
     !manufacturer ||
-    !raw_materials ||
-    !product_price ||
-    !product_quantity
+    !raw_materials
   ) {
     return res.status(400).send("Please provide all the required fields");
   }
@@ -37,15 +33,13 @@ const createNewProduct = async (req, res) => {
   }
 
   
-  const manufacturerExists = await Manufacturer.findById(manufacturer_id);
+  const manufacturerExists = await Manufacturer.findById(manufacturer);
 
   const newProduct = new Product({
     name,
     price,
     quantity,
     raw_materials: raw_materials_array.map((raw_material) => raw_material._id),
-    product_price,
-    product_quantity,
     manufacturer: manufacturerExists,
   });
   try {

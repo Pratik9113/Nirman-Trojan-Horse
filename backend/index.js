@@ -10,6 +10,7 @@ const NewProductRouter = require("./routes/new_product.route");
 const router = require("./routes/supplier.route")
 const RawMaterialRouter = require("./routes/raw_material")
 const transactionRouter = require("./routes/addTransaction")
+const retailerRouter = require("./routes/retailer")
 // const AddPostRouter = require("./routes/AddPost.routes");
 // const GetPostRouter = require("./routes/GetPost.route");
 const cookieParser = require("cookie-parser");
@@ -40,6 +41,7 @@ app.use("/api/product/create",NewProductRouter)
 app.use("/api/supplier",router)
 app.use("/api/raw_material",RawMaterialRouter)
 app.use("/api/transaction",transactionRouter)
+app.use("/api/retailer",retailerRouter)
 // app.use("/api/posts", AddPostRouter);
 // app.use("/api/posts", GetPostRouter);
 
@@ -160,21 +162,21 @@ app.listen(port, () => {
 
 //     const input = `Message received from ${from}: ${vendorMessage} : ${to}`;
 
-    try {
-        const response = await axios.post("http://127.0.0.1:5000/negotiate", { input, from });
-        const twiml = new MessagingResponse();
-        // twiml.message('The Robots are coming!'); 
-        twiml.message(response.data.response); 
-        res.writeHead(200, { 'Content-Type': 'text/xml' });
-        res.end(twiml.toString());
-    } catch (error) {
-        console.error("Error negotiating:", error.message);
-        const twiml = new MessagingResponse();
-        twiml.message("An error occurred. Please try again later.");
-        res.writeHead(200, { 'Content-Type': 'text/xml' });
-        res.end(twiml.toString());
-    }
-});
+//     try {
+//         const response = await axios.post("http://127.0.0.1:5000/negotiate", { input, from });
+//         const twiml = new MessagingResponse();
+//         // twiml.message('The Robots are coming!'); 
+//         twiml.message(response.data.response); 
+//         res.writeHead(200, { 'Content-Type': 'text/xml' });
+//         res.end(twiml.toString());
+//     } catch (error) {
+//         console.error("Error negotiating:", error.message);
+//         const twiml = new MessagingResponse();
+//         twiml.message("An error occurred. Please try again later.");
+//         res.writeHead(200, { 'Content-Type': 'text/xml' });
+//         res.end(twiml.toString());
+//     }
+// });
 
 // app.get("/", (req, res) => {
 //     res.send("Server is running");

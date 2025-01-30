@@ -8,7 +8,7 @@ const signup = async (req, res) => {
     // }
     // const uploadResult = await cloudinary.uploader.upload(req.file.path);
     // console.log("Cloudinary upload result:", uploadResult);
-    const { address, email, password, phone_number,manufacturer_type} = req.body;
+    const { address, email, password, phone_number,manufacturer_type,name} = req.body;
     if ( !email || !password || !address || !phone_number || !manufacturer_type) {
       return res.status(400).send("Please provide all the required fields");
     }
@@ -22,6 +22,7 @@ const signup = async (req, res) => {
       address,
       email,
       password,
+      name,
       phone:phone_number,
       typeOfManufacturer:manufacturer_type
     });

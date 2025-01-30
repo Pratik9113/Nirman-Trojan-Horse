@@ -12,7 +12,11 @@ const transactionSchema = new Schema({
     product_details:{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Product'
-    },    
+    },
+    quantity:{
+        type:Number,
+        required:true
+    }, 
 
 }, {
     timestamps: true

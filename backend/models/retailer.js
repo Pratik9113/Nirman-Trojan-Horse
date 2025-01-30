@@ -7,6 +7,10 @@ const RetailerSchema = new mongoose.Schema(
       unique: true,
       match: [/.+@.+\..+/, "Please enter a valid email address"],
     },
+    name:{
+      type: String,
+      required: true,
+    },
     phone: {
       type: String,
       required: true,
