@@ -1,6 +1,6 @@
 const express = require("express");
-const { auth } = require("../middlewares/auth.middleware");
-const { GetPost, GetUsers } = require("../controllers/GetPost.controller");
+const { auth } = require("../middlewares/auth");
+const { GetPost, GetUsers } = require("../controllers/GetPost");
 
 const GetPostRouter = express.Router();
 GetPostRouter.get("/getpost", auth, GetPost);

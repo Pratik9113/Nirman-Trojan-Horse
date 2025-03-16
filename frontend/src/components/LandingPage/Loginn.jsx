@@ -19,7 +19,9 @@ function Loginn() {
   const [signUpPassword, setSignUpPassword] = useState("");
   const [signUpPhone, setSignUpPhone] = useState("");
   const [signUpAddress, setSignUpAddress] = useState("");
+  const [signUpName, setSignUpName] = useState("");
   const [signUpTypeOfManufacturer, setSignUpTypeOfManufacturer] = useState("");
+  const [signUpType, setSignUpType] = useState("");
 
   useEffect(() => {
     const container = containerRef.current;
@@ -58,7 +60,7 @@ function Loginn() {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials:true
+          withCredentials: true,
         }
       );
       if (response.status === 200) {
@@ -81,6 +83,7 @@ function Loginn() {
     e.preventDefault();
     try {
       const formData = {
+        name: signUpName,
         email: signUpEmail,
         password: signUpPassword,
         phone_number: signUpPhone,
@@ -88,28 +91,59 @@ function Loginn() {
         manufacturer_type: signUpTypeOfManufacturer,
       };
       console.log("form data", formData);
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND}/api/signup`,
-        {
+
+      if(signUpType === "Manufacturer"){
+        const response = await axios.post(
+          `${import.meta.env.VITE_BACKEND}/api/signup`,
+          {
+            name: signUpName,
+            email: signUpEmail,
+            password: signUpPassword,
+            phone_number: signUpPhone,
+            address: signUpAddress,
+            manufacturer_type: signUpTypeOfManufacturer,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+          }
+        );
+        console.log(response.data);
+        toast.success("Manufacturer created successfully");
+        setSignUpEmail("");
+        setSignUpPassword("");
+        setSignUpPhone("");
+        setSignUpAddress("");
+        setSignUpTypeOfManufacturer("");
+        setSignUpName("");
+      }
+
+      if(signUpType === "Buyer"){
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND}/api/user/register` || 'http://localhost:3000/api/user/register',{
+          name: signUpName,
           email: signUpEmail,
           password: signUpPassword,
           phone_number: signUpPhone,
           address: signUpAddress,
-          manufacturer_type: signUpTypeOfManufacturer,
-        },
-        {
-          headers: {
+        },{
+          headers:{
             "Content-Type": "application/json",
           },
-        }
-      );
-      console.log(response.data);
-      toast.success("Manufacturer created successfully");
-      setSignUpEmail("");
-      setSignUpPassword("");
-      setSignUpPhone("");
-      setSignUpAddress("");
-      setSignUpTypeOfManufacturer("");
+          withCredentials: true,
+        })
+        console.log(response.data);
+        toast.success("Buyer created successfully");
+        setSignUpEmail("");
+        setSignUpPassword("");
+        setSignUpPhone("");
+        setSignUpAddress("");
+        setSignUpName("");
+        setSignUpTypeOfManufacturer("");
+      }
+
+      
     } catch (error) {
       console.error("Error during signup:", error);
       toast.error("Internal Server Error");
@@ -177,7 +211,16 @@ function Loginn() {
             </NavLink>
           </div>
           <span>or use your email and password</span>
-
+          <select
+            name="type"
+            id="type"
+            onChange={(e) => setSignUpType(e.target.value)}
+          >
+            <option value="">Select Type</option>
+            <option value="Manufacturer">Manufacturer</option>
+            <option value="Retailer">Retailer</option>
+            <option value="Buyer">Buyer</option>
+          </select>
           <input
             type="email"
             placeholder="Email"
@@ -186,6 +229,14 @@ function Loginn() {
             required
           />
 
+          <input
+            type="text"
+            name="name"
+            placeholder="Name"
+            value={signUpName}
+            onChange={(e) => setSignUpName(e.target.value)}
+            required
+          />
           <input
             type="password"
             placeholder="Password"
@@ -211,21 +262,23 @@ function Loginn() {
             required
           />
 
-          <select
-            value={signUpTypeOfManufacturer}
-            className="bg-white border border-orange-200 w-[19rem] mt-2 p-1 mb-1 text-black"
-            onChange={(e) => setSignUpTypeOfManufacturer(e.target.value)}
-            required
-          >
-            <option value="">Select Manufacturer Type</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Food">Food</option>
-            <option value="Toys">Toys</option>
-            <option value="Cosmetics">Cosmetics</option>
-            <option value="Sports Equipment">Sports Equipment</option>
-          </select>
+          {signUpType === "Manufacturer" && (
+            <select
+              value={signUpTypeOfManufacturer}
+              className="bg-white border border-orange-200 w-[19rem] mt-2 p-1 mb-1 text-black rounded-md"
+              onChange={(e) => setSignUpTypeOfManufacturer(e.target.value)}
+              required
+            >
+              <option value="">Select Manufacturer Type</option>
+              <option value="Clothing">Clothing</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Food">Food</option>
+              <option value="Toys">Toys</option>
+              <option value="Cosmetics">Cosmetics</option>
+              <option value="Sports Equipment">Sports Equipment</option>
+            </select>
+          )}
 
           <button type="submit">Sign Up</button>
         </form>
@@ -249,7 +302,11 @@ function Loginn() {
               Register with your personal details to use all of the site’s
               features
             </p>
-            <button className="border-2 border-red-800" id="register" ref={registerBtnRef}>
+            <button
+              className="border-2 border-red-800"
+              id="register"
+              ref={registerBtnRef}
+            >
               Sign Up
             </button>
           </div>

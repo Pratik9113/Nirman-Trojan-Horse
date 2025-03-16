@@ -557,7 +557,7 @@ nav {
   height: 100%;
 }
 
-.container input {
+.container input{
   background-color: #eee;
   border: none;
   margin: 8px 0;
@@ -566,6 +566,17 @@ nav {
   border-radius: 8px;
   width: 100%;
   outline: none;
+}
+
+.container select{
+  background-color: #eee;
+  border: none;
+  margin: 8px 0;
+  padding: 10px 15px;
+  font-size: 13px;
+  border-radius: 8px;
+  width: 100%;
+  outline: none
 }
 
 .form-container {
@@ -698,5 +709,15 @@ nav {
   margin-left: 20px;
 }
 .logiin{
-  margin: 10px 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 768px;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
 }
