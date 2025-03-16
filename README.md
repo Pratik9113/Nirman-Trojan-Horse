@@ -1,40 +1,109 @@
-# Nirman Gati
+# AI-Powered Price Negotiation Chatbot with Google Gemini
 
-# Team Name: Trojan Horse_41
+This project implements an AI-powered price negotiation chatbot for an e-commerce platform using Google's Gemini API. The chatbot allows users to negotiate prices for products in a natural, conversational way.
 
-## Overview
-**Nirman Gati** is a smart platform designed to help local manufacturers streamline their operations by addressing inefficiencies in demand forecasting, inventory management, and unsustainable practices. By reducing costs, minimizing resource wastage, and optimizing supply chain processes, we aim to provide a solution that enhances business performance and sustainability.
+## Features
 
-## Links
-- **PPT**: [Link to Presentation]( https://www.canva.com/design/DAGcJf6QFf4/Tgo45uLt6xjzgcWfY3ZE1g/edit)
-- **Video**: [Link to Demo Video](https://drive.google.com/file/d/1cdgcmsQI5NRsL-1yPH37ez_UVR_cm81V/view?usp=sharing)
+- Interactive chat interface for price negotiation
+- Powered by Google's Gemini AI model
+- Smart detection of budget and quantity from user messages
+- Real-time negotiation based on discount thresholds
+- Purchase completion flow
+- Typing indicators and visual feedback
+- Mobile-responsive design
 
+## Setup Instructions
 
-## Problem Statement
-Sameer is a young man, based in Indore, he has big dreams about his dad's furniture manufacturing business which he'll be soon taking up.
+### Prerequisites
 
-But he feels helpless as he doesn't have a big network and doesn't know a lot of people from the industry. Moreover setting up meetings with raw sellers and travelling cross town is very exhausting and inefficient. 
+- Node.js (v14 or higher)
+- npm or yarn
+- Google Gemini API key
 
-On top of that he has no analysis of what his customers like and the piling up dead stock is adding insult to injury.
+### Backend Setup
 
-This is when sameer comes to know about Nirman Gati. Which is an AI/ML based business optimization platform.
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd <repository-directory>
+```
 
-# what we offer:
-<br>Choose Your Producers - Browse our extensive catalog to find the perfect prices for your requirements.</br>
-<br>Sell Your Products - Select a price range, product and quantity that fits your business.</br>
-<br>Quick Delivery and Setup - Enjoy fast delivery and professional setup, so you create your brand value.</br>
+2. Install backend dependencies:
+```bash
+cd backend
+npm install
+```
 
+3. Create a `.env` file in the backend directory with the following content:
+```
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/nirman-trojan-horse
+JWT_SECRET=your_jwt_secret_here
+GEMINI_API_KEY=your_gemini_api_key_here
+FRONTEND_URL=http://localhost:5173
+```
 
+4. Get a Gemini API key:
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create an API key
+   - Copy the key to your `.env` file
 
-Experience a seamless and efficient process designed to make your business grow using a streamlined preocess.
-<h3>Procure your raw material, track orders from retailers, and monitor
-            payments with ease. Streamline Your Business</h3>
+5. Start the backend server:
+```bash
+npm start
+```
 
+### Frontend Setup
 
+1. Install frontend dependencies:
+```bash
+cd frontend
+npm install
+```
 
-## Tech Stack
-- **Frontend**: React (for mobile app development)
-- **Backend**: Node.js, Express Flask
-- **Database**: MongoDB
-- **AI Tools**: GenAi
+2. Start the frontend development server:
+```bash
+npm run dev
+```
+
+3. Open your browser and navigate to `http://localhost:5173`
+
+## How to Use
+
+1. Browse the available products on the dashboard
+2. Click "Negotiate Price" on any product
+3. Enter your budget and desired quantity
+4. Negotiate with the AI assistant
+5. Complete the purchase when a deal is reached
+
+## Customization
+
+### Negotiation Parameters
+
+You can customize the negotiation parameters in `backend/controllers/negotiation.controller.js`:
+
+- Discount thresholds
+- Negotiation strategies
+- Response tone and style
+
+### UI Customization
+
+The UI components are built with shadcn/ui and can be customized in the frontend components.
+
+## Technologies Used
+
+- **Backend**: Node.js, Express, MongoDB
+- **Frontend**: React, Vite, shadcn/ui
+- **AI**: Google Gemini API
+- **Styling**: Tailwind CSS
+
+## License
+
+MIT
+
+## Acknowledgements
+
+- Google Gemini API
+- shadcn/ui component library
+- Tailwind CSS
 

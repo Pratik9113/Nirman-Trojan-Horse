@@ -12,7 +12,7 @@ import Testimonial from "./components/LandingPage/Testimonial";
 import Work from "./components/LandingPage/Work";
 import Loginn from "./components/LandingPage/Loginn";
 import RetailerDashboard from "./components/RetailerDashboard";
-import ShopkeeperDashboard from "./components/ShopkeeperDashboard";
+import UserDashboard from "./components/UserDashboard";
 
 function App() {
   return (
@@ -62,12 +62,12 @@ function App() {
         />
 
         <Route
-          path="/shopkeeper/dashboard"
+          path="/user/dashboard"
           element={
             <>
               {" "}
               <Navbar />
-              <ShopkeeperDashboard />{" "}
+              <UserDashboard />{" "}
             </>
           }
         />

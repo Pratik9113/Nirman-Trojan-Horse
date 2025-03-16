@@ -12,6 +12,7 @@ const RawMaterialRouter = require("./routes/raw_material")
 const transactionRouter = require("./routes/addTransaction")
 const retailerRouter = require("./routes/retailer")
 const userRouter = require("./routes/user_details")
+const negotiationRouter = require('./routes/negotiation');
 // const AddPostRouter = require("./routes/AddPost.routes");
 // const GetPostRouter = require("./routes/GetPost.route");
 const cookieParser = require("cookie-parser");
@@ -44,16 +45,14 @@ app.use("/api/raw_material",RawMaterialRouter)
 app.use("/api/transaction",transactionRouter)
 app.use("/api/retailer",retailerRouter)
 app.use("/api/user",userRouter)
+app.use('/api/negotiate', negotiationRouter);
 // app.use("/api/posts", AddPostRouter);
 // app.use("/api/posts", GetPostRouter);
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/nirman-trojan-horse', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch((err) => console.error('MongoDB connection error:', err));
+// mongoose.connect(process.env.MONGODB_URI)
+// .then(() => console.log('Connected to MongoDB'))
+// .catch((err) => console.error('MongoDB connection error:', err));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

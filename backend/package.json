@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.24.0",
     "axios": "^1.7.9",
     "backend": "file:",
     "cloudinary": "^2.5.1",
