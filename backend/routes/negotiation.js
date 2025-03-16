@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Negotiation } = require("../models/Negotiation");
 const { Product } = require("../models/product");
-const { User } = require("../models/user");
+const { Retailer } = require("../models/retailer");
 const auth = require("../middlewares/auth");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
@@ -147,18 +147,18 @@ router.get("/:negotiationId", auth, async (req, res) => {
 
 // Retailer-facing routes
 // Get all active negotiations for a retailer
-router.get("/retailer/negotiations", async (req, res) => {
+router.get("/retailer/negotiations", auth, async (req, res) => {
   try {
     // Verify user is a retailer
-    const user = await User.findById(req.user.id);
-    if (!user || user.role !== "retailer") {
-      return res
-        .status(403)
-        .json({ error: "Unauthorized. Retailer access only." });
-    }
+    // const user = await User.findById(req.user.id);
+    // if (!user || user.role !== "retailer") {
+    //   return res
+    //     .status(403)
+    //     .json({ error: "Unauthorized. Retailer access only." });
+    // }
 
     const negotiations = await Negotiation.find({
-      retailerId: req.user.id,
+      retailerId: req.userId.id,
       status: { $in: ["active", "counter-offered"] },
     })
       .sort({ updatedAt: -1 })

@@ -6,7 +6,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { X, Send, ShoppingCart, AlertCircle } from "lucide-react";
 import axios from 'axios';
 
-const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId = "1" }) => {
+const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) => {
   const [messages, setMessages] = useState([
     {
       type: 'bot',

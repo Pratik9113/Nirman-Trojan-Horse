@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
 import ChatBot from "./ChatBot";
+import axios from "axios";
 
 const DUMMY_PRODUCTS = [
   {
@@ -63,11 +64,30 @@ const DUMMY_PRODUCTS = [
 const UserDashboard = () => {
   const [showChat, setShowChat] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [products, setProducts] = useState([]);
 
   const handleNegotiate = (product) => {
+    console.log(product.manufacturer._id)
     setSelectedProduct(product);
     setShowChat(true);
   };
+  
+  const fetchProducts = async () => {
+    const response = await axios.get(
+      `${import.meta.env.VITE_BACKEND}/api/product/getall`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
+    console.log(response.data);
+    setProducts(response.data);
+  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   return (
     <div className="mx-auto p-6 w-screen bg-white">
@@ -76,40 +96,46 @@ const UserDashboard = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {DUMMY_PRODUCTS.map((product) => (
-          <Card key={product._id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
-              <CardTitle>{product.name}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold">Price:</span>
-                  <span>${product.price}</span>
+        {
+          products.map((product) => (
+            <Card
+              key={product._id}
+              className="hover:shadow-lg transition-shadow"
+            >
+              <CardHeader>
+                <CardTitle>{product.name}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Price:</span>
+                    <span>${product.price}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Available Quantity:</span>
+                    <span>{product.quantity} units</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="font-semibold">Manufacturer:</span>
+                    <span>{product.manufacturer?.name || "N/A"}</span>
+                  </div>
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-600">
+                      {product.description}
+                    </p>
+                  </div>
+                  <div className="mt-4">
+                    <Button
+                      className="w-full bg-orange-500 hover:bg-orange-600"
+                      onClick={() => handleNegotiate(product)}
+                    >
+                      Negotiate Price
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold">Available Quantity:</span>
-                  <span>{product.quantity} units</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold">Manufacturer:</span>
-                  <span>{product.manufacturer?.name || "N/A"}</span>
-                </div>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-600">{product.description}</p>
-                </div>
-                <div className="mt-4">
-                  <Button
-                    className="w-full bg-orange-500 hover:bg-orange-600"
-                    onClick={() => handleNegotiate(product)}
-                  >
-                    Negotiate Price
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          ))}
       </div>
 
       {/* AI Chatbot */}

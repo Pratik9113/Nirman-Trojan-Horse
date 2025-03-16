@@ -219,7 +219,7 @@ function Loginn() {
             <option value="">Select Type</option>
             <option value="Manufacturer">Manufacturer</option>
             <option value="Retailer">Retailer</option>
-            <option value="Buyer">Buyer</option>
+            <option value="Buyer">Raw Material Supplier</option>
           </select>
           <input
             type="email"
