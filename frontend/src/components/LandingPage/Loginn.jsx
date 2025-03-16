@@ -117,7 +117,7 @@ function Loginn() {
   };
 
   return (
-    <div className="container logiin" ref={containerRef}>
+    <div className="container logiin mx-auto" ref={containerRef}>
       {/* Sign In Form */}
       <div className="form-container sign-in">
         <form onSubmit={handleSignIn}>
@@ -139,6 +139,7 @@ function Loginn() {
           <span>or use your email password</span>
           <input
             type="email"
+            name="email"
             placeholder="Email"
             value={signInEmail}
             onChange={(e) => setSignInEmail(e.target.value)}
@@ -146,6 +147,7 @@ function Loginn() {
           />
           <input
             type="password"
+            name="password"
             placeholder="Password"
             value={signInPassword}
             onChange={(e) => setSignInPassword(e.target.value)}
