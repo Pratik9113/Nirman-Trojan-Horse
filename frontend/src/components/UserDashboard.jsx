@@ -71,7 +71,7 @@ const UserDashboard = () => {
     setSelectedProduct(product);
     setShowChat(true);
   };
-  
+
   const fetchProducts = async () => {
     const response = await axios.get(
       `${import.meta.env.VITE_BACKEND}/api/product/getall`,
@@ -82,7 +82,7 @@ const UserDashboard = () => {
         withCredentials: true,
       }
     );
-    console.log(response.data);
+    console.log("dataa", response.data);
     setProducts(response.data);
   };
   useEffect(() => {
@@ -109,7 +109,7 @@ const UserDashboard = () => {
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="font-semibold">Price:</span>
-                    <span>${product.price}</span>
+                    <span>${product.max_price}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="font-semibold">Available Quantity:</span>
@@ -147,7 +147,8 @@ const UserDashboard = () => {
               setSelectedProduct(null);
             }}
             productId={selectedProduct._id}
-            initialPrice={selectedProduct.price}
+            initialPrice={selectedProduct.max_price}
+            minimumPrice={selectedProduct.min_price}
             productName={selectedProduct.name}
             retailerId={selectedProduct.manufacturer?._id || "1"}
           />

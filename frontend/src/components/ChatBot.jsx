@@ -6,7 +6,7 @@ import { ScrollArea } from "./ui/scroll-area";
 import { X, Send, ShoppingCart, AlertCircle } from "lucide-react";
 import axios from 'axios';
 
-const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) => {
+const ChatBot = ({ onClose, productId, minimumPrice, initialPrice, productName, retailerId }) => {
   const [messages, setMessages] = useState([
     {
       type: 'bot',
@@ -31,7 +31,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
     if (scrollAreaRef.current) {
       scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight;
     }
-    
+
     // Focus input when chat opens
     if (inputRef.current) {
       inputRef.current.focus();
@@ -44,7 +44,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
       // Check for retailer response every 5 seconds
       const interval = setInterval(checkRetailerResponse, 5000);
       setCheckRetailerInterval(interval);
-      
+
       return () => {
         if (checkRetailerInterval) clearInterval(checkRetailerInterval);
       };
@@ -53,11 +53,11 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
 
   const checkRetailerResponse = async () => {
     if (!negotiationState.negotiationId) return;
-    
+
     try {
       const response = await axios.get(`/api/negotiate/retailer/negotiations/${negotiationState.negotiationId}`);
       const negotiation = response.data;
-      
+      console.log(negotiation)
       // If retailer has responded and we haven't processed it yet
       if (negotiation.status !== 'active' && !negotiationState.retailerResponse) {
         if (negotiation.status === 'accepted') {
@@ -67,7 +67,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
             content: `Great news! The retailer has accepted your offer of $${negotiationState.budget} for ${negotiationState.quantity} units of ${productName}.`,
             showPurchaseButton: true
           }]);
-          
+
           setNegotiationState(prev => ({
             ...prev,
             stage: 'final',
@@ -76,21 +76,21 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
           }));
         } else if (negotiation.status === 'counter-offered') {
           // Retailer made a counter offer
-          const counterMessage = negotiation.retailerInput || 
+          const counterMessage = negotiation.retailerInput ||
             `I can offer you a price of $${negotiation.counterOffer} per unit instead. Would this work for you?`;
-          
+
           setMessages(prev => [...prev, {
             type: 'bot',
             content: `The retailer has responded with a counter offer: ${counterMessage}`
           }]);
-          
+
           setNegotiationState(prev => ({
             ...prev,
             retailerResponse: 'counter-offered',
             counterOffer: negotiation.counterOffer
           }));
         }
-        
+
         // Clear the interval since we've processed the response
         if (checkRetailerInterval) {
           clearInterval(checkRetailerInterval);
@@ -114,7 +114,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
     const newMessages = [...messages, { type: 'user', content: inputMessage }];
     setMessages(newMessages);
     setInputMessage('');
-    
+
     // Set processing state
     setNegotiationState(prev => ({ ...prev, isProcessing: true }));
 
@@ -125,18 +125,18 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
       // If retailer has counter-offered and user is responding
       if (retailerResponse === 'counter-offered') {
         // Check if user accepts the counter offer
-        if (inputMessage.toLowerCase().includes('yes') || 
-            inputMessage.toLowerCase().includes('accept') || 
-            inputMessage.toLowerCase().includes('agree') || 
-            inputMessage.toLowerCase().includes('deal')) {
-          
+        if (inputMessage.toLowerCase().includes('yes') ||
+          inputMessage.toLowerCase().includes('accept') ||
+          inputMessage.toLowerCase().includes('agree') ||
+          inputMessage.toLowerCase().includes('deal')) {
+
           // User accepts counter offer
           setMessages(prev => [...prev, {
             type: 'bot',
             content: `Excellent! You've accepted the retailer's counter offer of $${counterOffer} per unit for ${quantity} units of ${productName}. Would you like to proceed with the purchase?`,
             showPurchaseButton: true
           }]);
-          
+
           setNegotiationState({
             budget: counterOffer * quantity,
             quantity,
@@ -146,12 +146,12 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
             negotiationId,
             retailerResponse: 'accepted'
           });
-          
+
           return;
-        } else if (inputMessage.toLowerCase().includes('no') || 
-                  inputMessage.toLowerCase().includes('reject') || 
-                  inputMessage.toLowerCase().includes('decline')) {
-          
+        } else if (inputMessage.toLowerCase().includes('no') ||
+          inputMessage.toLowerCase().includes('reject') ||
+          inputMessage.toLowerCase().includes('decline')) {
+
           // User rejects counter offer, continue negotiation
           stage = 'negotiating';
           retailerResponse = null;
@@ -167,27 +167,27 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
           budget = sortedNumbers[0];
           quantity = sortedNumbers[1];
           stage = 'negotiating';
-        } 
+        }
         // If only one number, try to determine if it's budget or quantity
         else if (numbers.length === 1) {
-          if (inputMessage.toLowerCase().includes('budget') || 
-              inputMessage.toLowerCase().includes('afford') || 
-              inputMessage.toLowerCase().includes('pay') ||
-              inputMessage.toLowerCase().includes('$') ||
-              inputMessage.toLowerCase().includes('dollar')) {
+          if (inputMessage.toLowerCase().includes('budget') ||
+            inputMessage.toLowerCase().includes('afford') ||
+            inputMessage.toLowerCase().includes('pay') ||
+            inputMessage.toLowerCase().includes('$') ||
+            inputMessage.toLowerCase().includes('dollar')) {
             budget = numbers[0];
             stage = 'budget_set';
-            
+
             setMessages(prev => [...prev, {
               type: 'bot',
               content: `Thank you for sharing your budget of $${budget}. How many units of the ${productName} would you like to purchase?`
             }]);
-          } else if (inputMessage.toLowerCase().includes('quantity') || 
-                    inputMessage.toLowerCase().includes('units') || 
-                    inputMessage.toLowerCase().includes('pieces')) {
+          } else if (inputMessage.toLowerCase().includes('quantity') ||
+            inputMessage.toLowerCase().includes('units') ||
+            inputMessage.toLowerCase().includes('pieces')) {
             quantity = numbers[0];
             stage = 'quantity_set';
-            
+
             setMessages(prev => [...prev, {
               type: 'bot',
               content: `Great! You're interested in ${quantity} units. What's your budget for this purchase?`
@@ -196,7 +196,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
             // If unclear, assume it's budget
             budget = numbers[0];
             stage = 'budget_set';
-            
+
             setMessages(prev => [...prev, {
               type: 'bot',
               content: `I understand your budget is $${budget}. How many units would you like to purchase?`
@@ -209,7 +209,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
             content: `I'd be happy to help you negotiate a price. Could you please tell me your budget and how many units you're interested in?`
           }]);
         }
-      } 
+      }
       else if (stage === 'budget_set') {
         if (numbers.length > 0) {
           quantity = numbers[0];
@@ -220,7 +220,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
             content: `I need to know how many units you want to purchase. Please provide a quantity.`
           }]);
         }
-      } 
+      }
       else if (stage === 'quantity_set') {
         if (numbers.length > 0) {
           budget = numbers[0];
@@ -243,6 +243,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
           quantity,
           productName,
           initialPrice,
+          minimumPrice,
           retailerId,
           stage
         });
@@ -250,7 +251,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
         // Store negotiation ID if provided
         if (response.data.negotiationId && !negotiationId) {
           negotiationId = response.data.negotiationId;
-          
+
           // Add a message to inform the user that the retailer is being notified
           setMessages(prev => [...prev, {
             type: 'bot',
@@ -260,10 +261,10 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
         }
 
         // Check if deal is agreed (simple heuristic - can be improved)
-        const dealAgreed = response.data.message.toLowerCase().includes('deal') || 
-                          response.data.message.toLowerCase().includes('agreed') ||
-                          response.data.message.toLowerCase().includes('accept your offer') ||
-                          response.data.message.toLowerCase().includes('we can do that');
+        const dealAgreed = response.data.message.toLowerCase().includes('deal') ||
+          response.data.message.toLowerCase().includes('agreed') ||
+          response.data.message.toLowerCase().includes('accept your offer') ||
+          response.data.message.toLowerCase().includes('we can do that');
 
         setMessages(prev => [...prev, {
           type: 'bot',
@@ -272,7 +273,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
 
         if (dealAgreed) {
           stage = 'final';
-          
+
           // Add a final message with purchase option
           setTimeout(() => {
             setMessages(prev => [...prev, {
@@ -284,10 +285,10 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
         }
       }
 
-      setNegotiationState({ 
-        budget, 
-        quantity, 
-        stage, 
+      setNegotiationState({
+        budget,
+        quantity,
+        stage,
         isProcessing: false,
         dealAgreed: stage === 'final',
         negotiationId,
@@ -322,10 +323,10 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
       <CardHeader className="border-b py-3">
         <div className="flex justify-between items-center">
           <CardTitle className="text-lg flex items-center">
-            <img 
-              src="https://lh3.googleusercontent.com/vOpdnZDQiGgZtQXZZ6kWAcJbc0Kkc3o3xQs-LMPCiQbGCjqT-JCiU4wdrfLGPGIKRLmrgHZYnJLfmJEb=s0-rw" 
-              alt="Gemini" 
-              className="w-5 h-5 mr-2" 
+            <img
+              src="https://lh3.googleusercontent.com/vOpdnZDQiGgZtQXZZ6kWAcJbc0Kkc3o3xQs-LMPCiQbGCjqT-JCiU4wdrfLGPGIKRLmrgHZYnJLfmJEb=s0-rw"
+              alt="Gemini"
+              className="w-5 h-5 mr-2"
             />
             Negotiating: {productName}
           </CardTitle>
@@ -334,7 +335,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
           </Button>
         </div>
       </CardHeader>
-      
+
       <CardContent className="flex-grow p-4 overflow-hidden">
         <ScrollArea className="h-[350px] pr-4" ref={scrollAreaRef}>
           <div className="space-y-4">
@@ -344,13 +345,12 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
                 className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-lg p-3 ${
-                    message.type === 'user'
+                  className={`max-w-[80%] rounded-lg p-3 ${message.type === 'user'
                       ? 'bg-primary text-primary-foreground'
                       : message.isNotification
                         ? 'bg-amber-50 border border-amber-200 text-amber-800'
                         : 'bg-muted'
-                  }`}
+                    }`}
                 >
                   {message.isNotification && (
                     <div className="flex items-center mb-1 text-amber-600">
@@ -359,9 +359,9 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
                     </div>
                   )}
                   {message.content}
-                  
+
                   {message.showPurchaseButton && (
-                    <Button 
+                    <Button
                       className="mt-2 w-full bg-green-600 hover:bg-green-700"
                       onClick={handlePurchase}
                     >
@@ -372,7 +372,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
                 </div>
               </div>
             ))}
-            
+
             {negotiationState.isProcessing && (
               <div className="flex justify-start">
                 <div className="max-w-[80%] rounded-lg p-3 bg-muted">
@@ -399,7 +399,7 @@ const ChatBot = ({ onClose, productId, initialPrice, productName, retailerId}) =
             className="flex-grow"
             disabled={negotiationState.isProcessing || negotiationState.dealAgreed}
           />
-          <Button 
+          <Button
             onClick={handleSendMessage}
             disabled={!inputMessage.trim() || negotiationState.isProcessing || negotiationState.dealAgreed}
             className="bg-blue-600 hover:bg-blue-700"

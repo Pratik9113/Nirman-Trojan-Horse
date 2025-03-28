@@ -34,6 +34,9 @@ const negotiationSchema = new Schema({
     type: Number,
     required: true
   },
+  minimumPrice: {
+    type: Number,
+  },
   budget: {
     type: Number,
     required: true
@@ -72,6 +75,6 @@ negotiationSchema.pre('save', function(next) {
   next();
 });
 
-const Negotiation = mongoose.model('Negotiation', negotiationSchema);
+const Negotiation = mongoose.model('Negotiation_testing', negotiationSchema);
 
 module.exports = { Negotiation }; 
